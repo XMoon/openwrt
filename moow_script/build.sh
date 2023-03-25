@@ -5,8 +5,6 @@ if [ ! -f feeds.conf.default ]; then
     exit 1
 fi
 
-set -e
-
 # clean first
 echo "step 1: clean old build & tmp"
 make clean
@@ -29,6 +27,17 @@ fi
 ./scripts/feeds update -ai
 ./scripts/feeds install -af
 
-echo "step 3: build"
-cp -a makeconfig.d/x86_64.config .config
-make -j "$(nproc)" ||  make -j1 V=s
+read -p 'continue to build world?(y/n)' answer
+
+case "$answer" in 
+    [yY]|[yY][eE][sS] )
+        echo "step 3: build"
+        cp -a makeconfig.d/x86_64.config .config
+        make -j "$(nproc)" ||  make -j1 V=s
+        ;;
+    [nN]|[nN][oO] )
+        ;;
+    * )
+        echo "please input y/n."
+        ;;
+esac
