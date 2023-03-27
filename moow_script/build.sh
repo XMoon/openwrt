@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+action=$1
+
 if [ ! -f feeds.conf.default ]; then
     echo "must run this script in the top of openwrt source dir"
     exit 1
@@ -27,7 +30,11 @@ fi
 ./scripts/feeds update -ai
 ./scripts/feeds install -af
 
-read -p 'continue to build world?(y/n)' answer
+if [ -n $action ] && [ "$action" = "build" ]; then
+    answer="y"
+else
+    read -p 'continue to build world?(y/n)' answer
+fi
 
 case "$answer" in 
     [yY]|[yY][eE][sS] )
