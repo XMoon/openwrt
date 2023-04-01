@@ -27,6 +27,8 @@ if [ -d "$(pwd)/feeds/luci/applications/luci-app-smartdns" ];then
     rm -rf "$(pwd)/feeds/luci/applications/luci-app-smartdns"
 fi
 
+sed -i 's#../../luci.mk#$(TOPDIR)/feeds/luci/luci.mk#' $(pwd)/feeds/moow_packages/luci-app-smartdns/Makefile
+
 ./scripts/feeds update -ai
 ./scripts/feeds install -af
 
