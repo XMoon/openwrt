@@ -153,17 +153,12 @@ define Kernel/CopyImage
 	}
 endef
 
-# Always add "modules" so a proper Module.symvers file is written that
-# also contains symbols from the kernel modules. Without these symbols
-# external packages that depend on exported symbols from kernel modules
-# will fail to build.
 define Kernel/CompileImage/Default
 	rm -f $(TARGET_DIR)/init
-	+$(KERNEL_MAKE) $(KERNEL_MAKEOPTS_IMAGE) $(if $(KERNELNAME),$(KERNELNAME),all) modules
+	+$(KERNEL_MAKE) $(KERNEL_MAKEOPTS_IMAGE) $(if $(KERNELNAME),$(KERNELNAME),all)
 	$(call Kernel/CopyImage)
 endef
 
-# Here as well, always add "modules", see comment above.
 ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
 define Kernel/CompileImage/Initramfs
 	$(call Kernel/Configure/Initramfs)
@@ -171,7 +166,7 @@ define Kernel/CompileImage/Initramfs
 	$(if $(SOURCE_DATE_EPOCH),touch -hcd "@$(SOURCE_DATE_EPOCH)" $(TARGET_DIR) $(TARGET_DIR)/init)
 	rm -rf $(KERNEL_BUILD_DIR)/linux-$(LINUX_VERSION)/usr/initramfs_data.cpio*
 ifeq ($(CONFIG_TARGET_ROOTFS_INITRAMFS_SEPARATE),y)
-ifneq ($(qstrip $(CONFIG_EXTERNAL_CPIO)),)
+ifneq ($(call qstrip,$(CONFIG_EXTERNAL_CPIO)),)
 	$(CP) $(CONFIG_EXTERNAL_CPIO) $(KERNEL_BUILD_DIR)/initrd.cpio
 else
 	( cd $(TARGET_DIR); find . | LC_ALL=C sort | $(STAGING_DIR_HOST)/bin/cpio --reproducible -o -H newc -R 0:0 > $(KERNEL_BUILD_DIR)/initrd.cpio )
@@ -185,7 +180,7 @@ endif
 	$(if $(CONFIG_TARGET_INITRAMFS_COMPRESSION_XZ),$(STAGING_DIR_HOST)/bin/xz -T$(if $(filter 1,$(NPROC)),2,0) -9 -fz --check=crc32 $(KERNEL_BUILD_DIR)/initrd.cpio)
 	$(if $(CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD),$(STAGING_DIR_HOST)/bin/zstd -T0 -f -o $(KERNEL_BUILD_DIR)/initrd.cpio.zstd $(KERNEL_BUILD_DIR)/initrd.cpio)
 endif
-	+$(KERNEL_MAKE) $(KERNEL_MAKEOPTS_IMAGE) $(if $(KERNELNAME),$(KERNELNAME),all) modules
+	+$(KERNEL_MAKE) $(KERNEL_MAKEOPTS_IMAGE) $(if $(KERNELNAME),$(KERNELNAME),all)
 	$(call Kernel/CopyImage,-initramfs)
 endef
 else

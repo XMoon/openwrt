@@ -1,9 +1,5 @@
-src-git-full packages https://git.openwrt.org/feed/packages.git
-src-git-full luci https://git.openwrt.org/project/luci.git
-src-git-full routing https://git.openwrt.org/feed/routing.git
-src-git-full telephony https://git.openwrt.org/feed/telephony.git
+src-git packages https://git.openwrt.org/feed/packages.git^8e3a1824645f5e73ec44c897ac0755c53fb4a1f8
+src-git luci https://git.openwrt.org/project/luci.git^7739e9f5b03b830f51d53c384be4baef95054cb3
+src-git routing https://git.openwrt.org/feed/routing.git^83ef3784a9092cfd0a900cc28e2ed4e13671d667
+src-git telephony https://git.openwrt.org/feed/telephony.git^9746ae8f964e18f04b64fbe1956366954ff223f8
 src-git-full moow_packages https://github.com/XMoon/moow_packages.git
-#src-git-full video https://github.com/openwrt/video.git
-#src-git-full targets https://github.com/openwrt/targets.git
-#src-git-full oldpackages http://git.openwrt.org/packages.git
-#src-link custom /usr/src/openwrt/custom-feed
